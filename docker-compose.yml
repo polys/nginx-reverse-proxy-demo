@@ -1,0 +1,48 @@
+version: "3.3"
+
+services:
+
+  web:
+    image: httpd:alpine
+    restart: always
+    networks:
+      - backend
+
+  svc1:
+    build: ./backend
+    restart: always
+    environment:
+      - SERVICE_ID=svc1
+    networks:
+      - backend
+
+  svc2:
+    build: ./backend
+    restart: always
+    environment:
+      - SERVICE_ID=svc2
+    networks:
+      - backend
+
+  svc3:
+    build: ./backend
+    restart: always
+    environment:
+      - SERVICE_ID=svc3
+    networks:
+      - backend
+
+  proxy:
+    image: nginx:1.14.2-alpine
+    volumes:
+      - ./proxy-nginx.conf:/etc/nginx/nginx.conf:ro
+    restart: always
+    ports:
+      - "8080:80"
+    networks:
+      - backend
+      - frontend
+
+networks:
+  frontend:
+  backend:
